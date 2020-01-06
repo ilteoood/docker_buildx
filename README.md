@@ -13,3 +13,22 @@ The accepted inputs are:
 | `platform`    | String    | `linux/amd64,linux/arm64,linux/arm/v7`  | No         | Platforms (*comma separated*) that should be used to build the image |                 |
 | `dockerHubUser`   | String    |   | Only if `publish` is true         | User that will publish the image                 |
 | `dockerHubPassword`   | String    |   | Only if `publish` is true         | Password of the `dockerHubUser`                 |
+
+## Example of usage
+
+```
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        name: Build image job
+        steps:
+            - name: Checkout master
+              uses: actions/checkout@master
+            - name: Build and publish image
+              uses: ilteoood/docker_buildx@master
+              with:
+                publish: true
+                imageName: YOUR_IMAGE_NAME_HERE
+                dockerHubUser: YOUR_USER_HERE
+                dockerHubPassword: YOUR_PASSWORD_HERE
+```
