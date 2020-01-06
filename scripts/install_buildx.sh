@@ -1,9 +1,5 @@
 #!/bin/sh -l
 
-# Install curl
-apt-get update
-apt-get install curl wget -y
-
 # Download buildx
 curl -s https://api.github.com/repos/docker/buildx/releases/latest \
 | grep "browser_download_url.*buildx-*.*linux-amd64" \

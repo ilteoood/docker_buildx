@@ -5,13 +5,15 @@ const child_process = require('child_process');
 async function docker_buildx() {
     try {
         checkPlatform();
+        cloneMyself();
         const imageName = extractInput('imageName', true);
         await executeShellScript('install_buildx');
         const imageTag = extractInput('tag', false, 'latest');
         const publish = core.getInput('publish');
         const platform = extractInput('platform', false, 'linux/amd64,linux/arm64,linux/arm/v7');
         const buildFunction = publish ? buildAndPublish : buildOnly;
-        buildFunction(platform, imageName, imageTag);
+        await buildFunction(platform, imageName, imageTag);
+        cleanMyself();
     } catch (error) {
         core.setFailed(error.message);
     }
@@ -37,9 +39,9 @@ function checkRequiredInput(inputName, inputValue) {
 
 async function executeShellScript(scriptName, ...parameters) {
     parameters = (parameters || []).join(' ');
-    command = `./scripts/${scriptName}.sh ${parameters}`;
+    command = `sudo docker_buildx/scripts/${scriptName}.sh ${parameters}`;
     console.log(`Executing: ${command}`);
-    output = child_process.execSync(`./scripts/${scriptName}.sh ${parameters}`);
+    output = child_process.execSync(command);
     console.log(`Output: ${output}`);
 }
 
@@ -52,6 +54,14 @@ async function buildAndPublish(platform, imageName, imageTag) {
 
 async function buildOnly(platform, imageName, imageTag) {
     await executeShellScript('docker_build', platform, imageName, imageTag);
+}
+
+function cloneMyself() {
+    child_process.execSync(`git clone https://github.com/ilteoood/docker_buildx`);
+}
+
+function cleanMyself() {
+    child_process.execSync(`rm -rf docker_buildx`);
 }
 
 docker_buildx();
