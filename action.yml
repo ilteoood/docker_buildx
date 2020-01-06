@@ -1,5 +1,8 @@
-name: "Docker buildx"
+name: "Customizable Docker Buildx"
 description: "Configure docker to be used with buildx"
+branding:
+    icon: archive
+    color: blue
 inputs:
     tag:
         description: "Tag to apply to the image"
