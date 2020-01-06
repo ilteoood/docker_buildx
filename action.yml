@@ -1,0 +1,22 @@
+name: "Docker buildx"
+description: "Configure docker to be used with buildx"
+inputs:
+    tag:
+        description: "Tag to apply to the image"
+        default: "latest"
+    imageName:
+        description: "Name of the image"
+        required: true
+    publish:
+        description: "Indicate if the builded image should be published on Docker HUB"
+        default: "false"
+    platform:
+        description: "Platforms (comma separated) that should be used to build the image"
+        default: "linux/amd64,linux/arm64,linux/arm/v7"
+    dockerHubUser:
+        description: "User that will publish the image, if indicated"
+    dockerHubPassword:
+        description: "Password of the dockerHubUser"
+runs:
+    using: 'node12'
+    main: index.js
