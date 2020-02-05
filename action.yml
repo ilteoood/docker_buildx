@@ -10,6 +10,9 @@ inputs:
     imageName:
         description: "Name of the image"
         required: true
+    dockerFile:
+        description: "Name of the Dockerfile"
+        default: "Dockerfile"
     publish:
         description: "Indicate if the builded image should be published on Docker HUB"
         default: "false"

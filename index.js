@@ -9,10 +9,11 @@ async function docker_buildx() {
         const imageName = extractInput('imageName', true);
         await executeShellScript('install_buildx');
         const imageTag = extractInput('tag', false, 'latest');
+        const dockerFile = extractInput('dockerFile', false, 'Dockerfile');
         const publish = core.getInput('publish');
         const platform = extractInput('platform', false, 'linux/amd64,linux/arm64,linux/arm/v7');
         const buildFunction = publish ? buildAndPublish : buildOnly;
-        await buildFunction(platform, imageName, imageTag);
+        await buildFunction(platform, imageName, imageTag, dockerFile);
         cleanMyself();
     } catch (error) {
         core.setFailed(error.message);
@@ -45,15 +46,15 @@ async function executeShellScript(scriptName, ...parameters) {
     console.log(`Output: ${output}`);
 }
 
-async function buildAndPublish(platform, imageName, imageTag) {
+async function buildAndPublish(platform, imageName, imageTag, dockerFile) {
     const dockerHubUser = extractInput('dockerHubUser', true);
     const dockerHubPassword = extractInput('dockerHubPassword', true);
     await executeShellScript('dockerhub_login', dockerHubUser, dockerHubPassword);
-    await executeShellScript('docker_build_push', platform, imageName, imageTag);
+    await executeShellScript('docker_build_push', platform, imageName, imageTag, dockerFile);
 }
 
-async function buildOnly(platform, imageName, imageTag) {
-    await executeShellScript('docker_build', platform, imageName, imageTag);
+async function buildOnly(platform, imageName, imageTag, dockerFile) {
+    await executeShellScript('docker_build', platform, imageName, imageTag, dockerFile);
 }
 
 function cloneMyself() {
