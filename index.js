@@ -42,8 +42,7 @@ async function executeShellScript(scriptName, ...parameters) {
     parameters = (parameters || []).join(' ');
     command = `sudo docker_buildx/scripts/${scriptName}.sh ${parameters}`;
     console.log(`Executing: ${command}`);
-    output = child_process.execSync(command);
-    console.log(`Output: ${output}`);
+    child_process.execSync(command, {stdio: 'inherit'});
 }
 
 async function buildAndPublish(platform, imageName, imageTag, dockerFile) {
