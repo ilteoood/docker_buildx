@@ -10,7 +10,7 @@ async function docker_buildx() {
         await executeShellScript('install_buildx');
         const imageTag = extractInput('tag', false, 'latest');
         const dockerFile = extractInput('dockerFile', false, 'Dockerfile');
-        const publish = core.getInput('publish');
+        const publish = (core.getInput('publish').toLowerCase() === 'true');
         const platform = extractInput('platform', false, 'linux/amd64,linux/arm64,linux/arm/v7');
         const buildFunction = publish ? buildAndPublish : buildOnly;
         await buildFunction(platform, imageName, imageTag, dockerFile);
