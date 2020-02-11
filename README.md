@@ -7,7 +7,7 @@ The accepted inputs are:
 
 | Name          | Type      | Default   | Mandatory   |  Description                                                    |
 |---------------|-----------|-----------|-------------|-----------------------------------------------------------------|
-| `tag`         | String    | `latest`  | No          | Tag to apply to the image                                       |
+| `tag`         | String    | `latest`  | No          | Tags (*comma separated*) to apply to the image                  |
 | `imageName`   | String    |   | Yes         | Name of the image                                               |
 | `dockerFile`  | String    | `Dockerfile` | No       | Name of the Dockerfile |
 | `publish`     | Boolean   | `false`   | No          | Indicate if the builded image should be published on Docker HUB |

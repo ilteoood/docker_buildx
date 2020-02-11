@@ -5,7 +5,7 @@ branding:
     color: blue
 inputs:
     tag:
-        description: "Tag to apply to the image"
+        description: "Tags (comma separated) to apply to the image"
         default: "latest"
     imageName:
         description: "Name of the image"
