@@ -6,14 +6,8 @@ async function docker_buildx() {
     try {
         checkPlatform();
         cloneMyself();
-        const imageName = extractInput('imageName', true);
         await executeShellScript('install_buildx');
-        const imageTag = extractInput('tag', false, 'latest');
-        const dockerFile = extractInput('dockerFile', false, 'Dockerfile');
-        const publish = extractInput('publish', false, 'false').toLowerCase() === 'true';
-        const platform = extractInput('platform', false, 'linux/amd64,linux/arm64,linux/arm/v7');
-        const buildFunction = publish ? buildAndPublish : buildOnly;
-        await buildFunction(platform, imageName, imageTag, dockerFile);
+        await buildFunction();
         cleanMyself();
     } catch (error) {
         core.setFailed(error.message);
@@ -22,7 +16,7 @@ async function docker_buildx() {
 
 function checkPlatform() {
     if (os.platform() !== 'linux') {
-        throw new Error('Only supported on linux platform')
+        throw new Error('Only supported on linux platform');
     }
 }
 
@@ -40,20 +34,42 @@ function checkRequiredInput(inputName, inputValue) {
 
 async function executeShellScript(scriptName, ...parameters) {
     parameters = (parameters || []).join(' ');
-    command = `sudo docker_buildx/scripts/${scriptName}.sh ${parameters}`;
+    command = `docker_buildx/scripts/${scriptName}.sh ${parameters}`;
     console.log(`Executing: ${command}`);
     child_process.execSync(command, {stdio: 'inherit'});
 }
 
-async function buildAndPublish(platform, imageName, imageTag, dockerFile) {
-    const dockerHubUser = extractInput('dockerHubUser', true);
-    const dockerHubPassword = extractInput('dockerHubPassword', true);
-    await executeShellScript('dockerhub_login', dockerHubUser, dockerHubPassword);
-    await executeShellScript('docker_build_push', platform, imageName, imageTag, dockerFile);
-}
+async function buildFunction() {
+    // Parse input parameters
+    var imageName = extractInput('imageName', true);
+    var imageTag = extractInput('tag', false, 'latest');
+    var dockerFile = extractInput('dockerFile', false, 'Dockerfile');
+    var buildArg = extractInput('buildArg', false, 'none');
+    var platform = extractInput('platform', false, 'linux/amd64,linux/arm64,linux/arm/v7');
+    var publish = extractInput('publish', false, 'false').toLowerCase() === 'true';
 
-async function buildOnly(platform, imageName, imageTag, dockerFile) {
-    await executeShellScript('docker_build', platform, imageName, imageTag, dockerFile);
+    var dockerArgs = "--platform " + platform;
+
+    if (publish) {
+        const dockerHubUser = extractInput('dockerHubUser', true);
+        const dockerHubPassword = extractInput('dockerHubPassword', true);
+        await executeShellScript('docker_login', dockerHubUser, dockerHubPassword);
+        dockerArgs += " --push";
+    }
+
+    if (buildArg !== 'none') {
+        var args = buildArg.split(",");
+        for(var i = 0; i < args.length; i++) {
+            dockerArgs += " --build-arg " + args[i];
+        }
+    }
+
+    var tags = imageTag.split(",");
+    for (var i = 0; i < tags.length; i++) {
+        dockerArgs += " --tag " + imageName + ":" + tags[i];
+    }
+    dockerArgs += " -f " + dockerFile;
+    await executeShellScript('docker_build', dockerArgs);
 }
 
 function cloneMyself() {
