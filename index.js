@@ -40,7 +40,7 @@ function checkRequiredInput(inputName, inputValue) {
 
 async function executeShellScript(scriptName, ...parameters) {
     parameters = (parameters || []).join(' ');
-    command = `sudo docker_buildx/scripts/${scriptName}.sh ${parameters}`;
+    command = `docker_buildx/scripts/${scriptName}.sh ${parameters}`;
     console.log(`Executing: ${command}`);
     child_process.execSync(command, {stdio: 'inherit'});
 }
