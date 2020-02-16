@@ -1,3 +1,3 @@
 #!/bin/sh -l
 
-docker login -u $1 -p $2
+echo $2 | docker login --username $1 --password-stdin
