@@ -13,6 +13,9 @@ inputs:
     dockerFile:
         description: "Name of the Dockerfile"
         default: "Dockerfile"
+    buildArg:
+        description: "Build arguments (comma separated) used to build the image"
+        default: "none"
     publish:
         description: "Indicate if the builded image should be published on Docker HUB"
         default: "false"

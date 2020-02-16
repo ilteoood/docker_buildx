@@ -10,6 +10,7 @@ The accepted inputs are:
 | `tag`         | String    | `latest`  | No          | Tags (*comma separated*) to apply to the image                  |
 | `imageName`   | String    |   | Yes         | Name of the image                                               |
 | `dockerFile`  | String    | `Dockerfile` | No       | Name of the Dockerfile |
+| `buildArg`    | String    |        | No       | Build arguments (*comma separated*) used to build the image |
 | `publish`     | Boolean   | `false`   | No          | Indicate if the builded image should be published on Docker HUB |
 | `platform`    | String    | `linux/amd64,linux/arm64,linux/arm/v7`  | No         | Platforms (*comma separated*) that should be used to build the image |                 |
 | `dockerHubUser`   | String    |   | Only if `publish` is true         | User that will publish the image                 |
