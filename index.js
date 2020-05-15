@@ -11,10 +11,11 @@ async function docker_buildx() {
         const imageTag = extractInput('tag', false, 'latest');
         const dockerFile = extractInput('dockerFile', false, 'Dockerfile');
         const publish = extractInput('publish', false, 'false').toLowerCase() === 'true';
+        const load = extractInput('load', false, 'false').toLowerCase() === 'true';
         const platform = extractInput('platform', false, 'linux/amd64,linux/arm64,linux/arm/v7');
         const buildArg = extractInput('buildArg', false, '');
         const buildFunction = publish ? buildAndPublish : buildOnly;
-        await buildFunction(platform, imageName, imageTag, dockerFile, buildArg);
+        await buildFunction(platform, imageName, imageTag, dockerFile, buildArg, load);
         cleanMyself();
     } catch (error) {
         core.setFailed(error.message);
@@ -45,15 +46,15 @@ async function executeShellScript(scriptName, ...parameters) {
     child_process.execSync(command, {stdio: 'inherit'});
 }
 
-async function buildAndPublish(platform, imageName, imageTag, dockerFile, buildArg) {
+async function buildAndPublish(platform, imageName, imageTag, dockerFile, buildArg, load) {
     const dockerHubUser = extractInput('dockerHubUser', true);
     const dockerHubPassword = extractInput('dockerHubPassword', true);
     await executeShellScript('dockerhub_login', dockerHubUser, dockerHubPassword);
-    await executeShellScript('docker_build', platform, imageName, imageTag, dockerFile, true, buildArg);
+    await executeShellScript('docker_build', platform, imageName, imageTag, dockerFile, true, buildArg, load);
 }
 
-async function buildOnly(platform, imageName, imageTag, dockerFile, buildArg) {
-    await executeShellScript('docker_build', platform, imageName, imageTag, dockerFile, false, buildArg);
+async function buildOnly(platform, imageName, imageTag, dockerFile, buildArg, load) {
+    await executeShellScript('docker_build', platform, imageName, imageTag, dockerFile, false, buildArg, load);
 }
 
 function cloneMyself() {

@@ -15,7 +15,7 @@ The accepted inputs are:
 | `platform`    | String    | `linux/amd64,linux/arm64,linux/arm/v7`  | No         | Platforms (*comma separated*) that should be used to build the image |                 |
 | `dockerHubUser`   | String    |   | Only if `publish` is true         | User that will publish the image                 |
 | `dockerHubPassword`   | String    |   | Only if `publish` is true         | Password of the `dockerHubUser`                 |
-
+| `load`     | Boolean   | `false`   | No          | Indicate if you want to load image into docker |
 ## Example of usage
 
 ```
