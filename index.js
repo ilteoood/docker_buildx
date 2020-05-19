@@ -14,8 +14,9 @@ async function docker_buildx() {
         const load = extractInput('load', false, 'false').toLowerCase() === 'true';
         const platform = extractInput('platform', false, 'linux/amd64,linux/arm64,linux/arm/v7');
         const buildArg = extractInput('buildArg', false, '');
+        const target = extractInput('target', false, '');
         const buildFunction = publish ? buildAndPublish : buildOnly;
-        await buildFunction(platform, imageName, imageTag, dockerFile, buildArg, load);
+        await buildFunction(platform, imageName, imageTag, dockerFile, buildArg, load, target);
         cleanMyself();
     } catch (error) {
         core.setFailed(error.message);
@@ -46,15 +47,15 @@ async function executeShellScript(scriptName, ...parameters) {
     child_process.execSync(command, {stdio: 'inherit'});
 }
 
-async function buildAndPublish(platform, imageName, imageTag, dockerFile, buildArg, load) {
+async function buildAndPublish(platform, imageName, imageTag, dockerFile, buildArg, load, target) {
     const dockerHubUser = extractInput('dockerHubUser', true);
     const dockerHubPassword = extractInput('dockerHubPassword', true);
     await executeShellScript('dockerhub_login', dockerHubUser, dockerHubPassword);
-    await executeShellScript('docker_build', platform, imageName, imageTag, dockerFile, true, buildArg, load);
+    await executeShellScript('docker_build', platform, imageName, imageTag, dockerFile, true, buildArg, load, target);
 }
 
-async function buildOnly(platform, imageName, imageTag, dockerFile, buildArg, load) {
-    await executeShellScript('docker_build', platform, imageName, imageTag, dockerFile, false, buildArg, load);
+async function buildOnly(platform, imageName, imageTag, dockerFile, buildArg, load, target) {
+    await executeShellScript('docker_build', platform, imageName, imageTag, dockerFile, false, buildArg, load, target);
 }
 
 function cloneMyself() {

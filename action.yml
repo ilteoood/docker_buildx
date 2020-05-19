@@ -26,6 +26,10 @@ inputs:
         description: "User that will publish the image, if indicated"
     dockerHubPassword:
         description: "Password of the dockerHubUser"
+    load:
+        description: "Indicate if you want to load image into docker"
+    target:
+        description: "Set the target build stage to build"
 runs:
     using: 'node12'
     main: index.js
