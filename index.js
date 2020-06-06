@@ -25,6 +25,7 @@ async function docker_buildx() {
 }
 
 function checkPlatform() {
+    core.info('Checking platform')
     if (os.platform() !== 'linux') {
         throw new Error('Only supported on linux platform');
     }
@@ -32,7 +33,7 @@ function checkPlatform() {
 
 function extractInput(inputName, required, defaultValue) {
     const inputValue = core.getInput(inputName);
-    if(required) checkRequiredInput(inputName, inputValue);
+    if (required) checkRequiredInput(inputName, inputValue);
     return inputValue ? inputValue : defaultValue;
 }
 
@@ -45,21 +46,28 @@ function checkRequiredInput(inputName, inputValue) {
 async function executeShellScript(scriptName, ...parameters) {
     parameters = (parameters || []).join(' ');
     const command = `docker_buildx/scripts/${scriptName}.sh ${parameters}`;
-    child_process.execSync(command, {stdio: 'inherit'});
+    child_process.execSync(command, { stdio: 'inherit' });
 }
 
 async function buildAndPublish(platform, imageName, imageTag, dockerFile, buildArg, load, context, target) {
-    const dockerHubUser = extractInput('dockerHubUser', true);
-    const dockerHubPassword = extractInput('dockerHubPassword', true);
-    await executeShellScript('dockerhub_login', dockerHubUser, dockerHubPassword);
+    core.info('Running buildAndPublish')
+    const dockerHubUser = extractInput('dockerHubUser', false);
+    const dockerUser = extractInput('dockerUser', !dockerHubUser, dockerHubUser);
+    const dockerHubPassword = extractInput('dockerHubPassword', false);
+    const dockerPassword = extractInput('dockerPassword', !dockerHubPassword, dockerHubPassword);
+    const dockerServer = extractInput('dockerServer', false, '');
+
+    await executeShellScript('docker_login', dockerUser, dockerPassword, dockerServer);
     await executeShellScript('docker_build', platform, imageName, imageTag, dockerFile, true, buildArg, load, context, target);
 }
 
 async function buildOnly(platform, imageName, imageTag, dockerFile, buildArg, load, context, target) {
+    core.info('Running buildOnly')
     await executeShellScript('docker_build', platform, imageName, imageTag, dockerFile, false, buildArg, load, context, target);
 }
 
 function cloneMyself() {
+    core.info('Cloning action')
     child_process.execSync(`git clone https://github.com/ilteoood/docker_buildx`);
 }
 

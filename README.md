@@ -13,8 +13,11 @@ The accepted inputs are:
 | `buildArg`    | String    |        | No       | Build arguments (*comma separated*) used to build the image |
 | `publish`     | Boolean   | `false`   | No          | Indicate if the builded image should be published on Docker HUB |
 | `platform`    | String    | `linux/amd64,linux/arm64,linux/arm/v7`  | No         | Platforms (*comma separated*) that should be used to build the image |                 |
-| `dockerHubUser`   | String    |   | Only if `publish` is true         | User that will publish the image                 |
-| `dockerHubPassword`   | String    |   | Only if `publish` is true         | Password of the `dockerHubUser`                 |
+| `dockerUser`   | String    | (value of `dockerHubUser`)  | Only if `publish` is true        | User that will publish the image                 |
+| `dockerHubUser`   | String    |   | Only if `publish` is true         | (DEPRECATED) User that will publish the image                 |
+| `dockerPassword`   | String    | (value of `dockerHubUser`)  | Only if `publish` is true         | Password of the `dockerUser`                 |
+| `dockerHubPassword`   | String    |   | Only if `publish` is true         | (DEPRECATED) Password of the `dockerHubUser`                 |
+| `dockerServer`   | String    |   |          | Registry, empty uses dockerHub |
 | `load`     | Boolean   | `false`   | No          | Indicate if you want to load image into docker |
 | `target`     | String   |    | No          | Set the target build stage to build |
 | `context`     | String   |  `.`  | No          | Set the context path |
@@ -33,6 +36,6 @@ jobs:
               with:
                 publish: true
                 imageName: YOUR_IMAGE_NAME_HERE
-                dockerHubUser: YOUR_USER_HERE
-                dockerHubPassword: YOUR_PASSWORD_HERE
+                dockerUser: YOUR_USER_HERE
+                dockerPassword: YOUR_PASSWORD_HERE
 ```
