@@ -32,6 +32,9 @@ inputs:
     target:
         description: "Set the target build stage to build"
         default: ""
+    context:
+        description: "Set the context path"
+        default: "."
 runs:
     using: 'node12'
     main: index.js

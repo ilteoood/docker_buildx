@@ -25,9 +25,9 @@ then
 fi
 
 TARGET=
-if [ ! -z "$8" ];
+if [ ! -z "$9" ];
 then
-   TARGET="--target $8"
+   TARGET="--target $9"
 fi
 
-docker buildx build --platform $1 $PUSH $LOAD $TAGS $BUILD_ARGS $TARGET -f $4 .
+docker buildx build --platform $1 $PUSH $LOAD $TAGS $BUILD_ARGS $TARGET -f $4 $8

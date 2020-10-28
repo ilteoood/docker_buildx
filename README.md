@@ -17,6 +17,7 @@ The accepted inputs are:
 | `dockerHubPassword`   | String    |   | Only if `publish` is true         | Password of the `dockerHubUser`                 |
 | `load`     | Boolean   | `false`   | No          | Indicate if you want to load image into docker |
 | `target`     | String   |    | No          | Set the target build stage to build |
+| `context`     | String   |  `.`  | No          | Set the context path |
 ## Example of usage
 
 ```
