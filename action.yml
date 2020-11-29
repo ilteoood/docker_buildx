@@ -17,15 +17,24 @@ inputs:
         description: "Build arguments (comma separated) used to build the image"
         default: "none"
     publish:
-        description: "Indicate if the builded image should be published on Docker HUB"
+        description: "Indicate if the builded image should be published on a registry"
         default: "false"
     platform:
         description: "Platforms (comma separated) that should be used to build the image"
         default: "linux/amd64,linux/arm64,linux/arm/v7"
-    dockerHubUser:
+    dockerUser:
         description: "User that will publish the image, if indicated"
+    dockerHubUser:
+        description: "(DEPRECATED) User that will publish the image, if indicated"
+        deprecationMessage: 'Use dockerUser instead'
+    dockerPassword:
+        description: "Password of the dockerUser"
     dockerHubPassword:
-        description: "Password of the dockerHubUser"
+        description: "(DEPRECATED) Password of the dockerUser"
+        deprecationMessage: 'Use dockerPassword instead'
+    dockerServer:
+        description: "Server to login against"
+        default: ""
     load:
         description: "Indicate if you want to load image into docker"
         default: "false"
