@@ -7,7 +7,7 @@ curl -s https://api.github.com/repos/docker/buildx/releases/latest \
 | tr -d \" \
 | wget -qi -
 
-# Confiure buildx
+# Configure buildx
 export DOCKER_CLI_EXPERIMENTAL=enabled
 mkdir -p ~/.docker/cli-plugins
 mv buildx* ~/.docker/cli-plugins/docker-buildx
