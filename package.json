@@ -10,6 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@actions/core": "^1.7.0"
+    "@actions/core": "^1.8.0"
   }
 }
