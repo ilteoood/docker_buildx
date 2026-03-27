@@ -1,6 +1,6 @@
-import {setFailed, info, getInput} from '@actions/core';
-import os from 'os';
+import { getInput, info, setFailed } from '@actions/core';
 import child_process from 'child_process';
+import os from 'os';
 
 async function docker_buildx() {
     try {
@@ -18,7 +18,7 @@ async function docker_buildx() {
         const label = extractInput('label', false, '');
         const context = extractInput('context', false, '.');
         const buildFunction = publish ? buildAndPublish : buildOnly;
-        await buildFunction(platform, imageName, imageTag, dockerFile, buildArg, load, context, target, label);
+        await buildFunction(platform, imageName, imageTag, dockerFile, buildArg, label, load, context, target);
         cleanMyself();
     } catch (error) {
         setFailed(error.message);
@@ -50,7 +50,7 @@ async function executeShellScript(scriptName, ...parameters) {
     child_process.execSync(command, { stdio: 'inherit' });
 }
 
-async function buildAndPublish(platform, imageName, imageTag, dockerFile, buildArg, load, context, target, label) {
+async function buildAndPublish(platform, imageName, imageTag, dockerFile, buildArg, label, load, context, target) {
     info('Running buildAndPublish')
     const dockerHubUser = extractInput('dockerHubUser', false);
     const dockerUser = extractInput('dockerUser', !dockerHubUser, dockerHubUser);
@@ -59,12 +59,12 @@ async function buildAndPublish(platform, imageName, imageTag, dockerFile, buildA
     const dockerServer = extractInput('dockerServer', false, '');
 
     await executeShellScript('docker_login', dockerUser, dockerPassword, dockerServer);
-    await executeShellScript('docker_build', platform, imageName, imageTag, dockerFile, true, buildArg, load, context, target, label);
+    await executeShellScript('docker_build', platform, imageName, imageTag, dockerFile, true, buildArg, label, load, context, target);
 }
 
-async function buildOnly(platform, imageName, imageTag, dockerFile, buildArg, load, context, target, label) {
+async function buildOnly(platform, imageName, imageTag, dockerFile, buildArg, label, load, context, target) {
     info('Running buildOnly')
-    await executeShellScript('docker_build', platform, imageName, imageTag, dockerFile, false, buildArg, load, context, target, label);
+    await executeShellScript('docker_build', platform, imageName, imageTag, dockerFile, false, buildArg, label, load, context, target);
 }
 
 function cloneMyself() {

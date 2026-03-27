@@ -18,22 +18,22 @@ do
     BUILD_ARGS="$BUILD_ARGS --build-arg $ARG"
 done
 
+LABELS=
+for LABEL in $(echo "$7" | tr ',' ' ')
+do
+    LABELS="$LABELS --label $LABEL"
+done
+
 LOAD=
-if [ "$7" = true ];
+if [ "$8" = true ];
 then
     LOAD="--load"
 fi
 
 TARGET=
-if [ ! -z "$9" ];
+if [ ! -z "${10}" ];
 then
-   TARGET="--target $9"
+   TARGET="--target ${10}"
 fi
 
-LABELS=
-for LABEL in $(echo "${10}" | tr ',' ' ')
-do
-    LABELS="$LABELS --label $LABEL"
-done
-
-docker buildx build --platform "$1" $PUSH $LOAD "$TAGS" "$BUILD_ARGS" "$TARGET" "$LABELS" -f "$4" "$8"
+docker buildx build --platform "$1" $PUSH $LOAD "$TAGS" "$BUILD_ARGS" "$TARGET" "$LABELS" -f "$4" "$9"
