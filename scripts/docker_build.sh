@@ -36,4 +36,4 @@ then
    TARGET="--target ${10}"
 fi
 
-docker buildx build --platform "$1" $PUSH $LOAD "$TAGS" "$BUILD_ARGS" "$TARGET" "$LABELS" -f "$4" "$9"
+docker buildx build --platform "$1" $PUSH $LOAD "$TAGS" "$BUILD_ARGS" "$LABELS" "$TARGET" -f "$4" "$9"
