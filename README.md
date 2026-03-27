@@ -14,9 +14,7 @@ The accepted inputs are:
 | `publish`     | Boolean   | `false`   | No          | Indicate if the builded image should be published on Docker HUB |
 | `platform`    | String    | `linux/amd64,linux/arm64,linux/arm/v7`  | No         | Platforms (*comma separated*) that should be used to build the image |                 |
 | `dockerUser`   | String    | (value of `dockerHubUser`)  | Only if `publish` is true        | User that will publish the image                 |
-| `dockerHubUser`   | String    |   | Only if `publish` is true         | (DEPRECATED) User that will publish the image                 |
 | `dockerPassword`   | String    | (value of `dockerHubUser`)  | Only if `publish` is true         | Password of the `dockerUser`                 |
-| `dockerHubPassword`   | String    |   | Only if `publish` is true         | (DEPRECATED) Password of the `dockerHubUser`                 |
 | `dockerServer`   | String    |   |          | Registry, empty uses dockerHub |
 | `load`     | Boolean   | `false`   | No          | Indicate if you want to load image into docker |
 | `target`     | String   |    | No          | Set the target build stage to build |

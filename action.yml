@@ -24,14 +24,8 @@ inputs:
         default: "linux/amd64,linux/arm64,linux/arm/v7"
     dockerUser:
         description: "User that will publish the image, if indicated"
-    dockerHubUser:
-        description: "(DEPRECATED) User that will publish the image, if indicated"
-        deprecationMessage: 'Use dockerUser instead'
     dockerPassword:
         description: "Password of the dockerUser"
-    dockerHubPassword:
-        description: "(DEPRECATED) Password of the dockerUser"
-        deprecationMessage: 'Use dockerPassword instead'
     dockerServer:
         description: "Server to login against"
         default: ""
