@@ -7,7 +7,7 @@ do
 done
 
 PUSH=
-if [ $5 = true ];
+if [ "$5" = true ];
 then
     PUSH="--push"
 fi
@@ -19,7 +19,7 @@ do
 done
 
 LOAD=
-if [ $7 = true ];
+if [ "$7" = true ];
 then
     LOAD="--load"
 fi
@@ -30,4 +30,10 @@ then
    TARGET="--target $9"
 fi
 
-docker buildx build --platform $1 $PUSH $LOAD $TAGS $BUILD_ARGS $TARGET -f $4 $8
+LABELS=
+for LABEL in $(echo "${10}" | tr ',' ' ')
+do
+    LABELS="$LABELS --label $LABEL"
+done
+
+docker buildx build --platform "$1" $PUSH $LOAD "$TAGS" "$BUILD_ARGS" "$TARGET" "$LABELS" -f "$4" "$8"

@@ -20,6 +20,7 @@ The accepted inputs are:
 | `dockerServer`   | String    |   |          | Registry, empty uses dockerHub |
 | `load`     | Boolean   | `false`   | No          | Indicate if you want to load image into docker |
 | `target`     | String   |    | No          | Set the target build stage to build |
+| `label`      | String   |    | No          | Labels (*comma separated*) to apply to the image |
 | `context`     | String   |  `.`  | No          | Set the context path |
 ## Example of usage
 

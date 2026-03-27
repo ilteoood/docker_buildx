@@ -41,6 +41,9 @@ inputs:
     target:
         description: "Set the target build stage to build"
         default: ""
+    label:
+        description: "Labels (comma separated) to apply to the image"
+        default: ""
     context:
         description: "Set the context path"
         default: "."

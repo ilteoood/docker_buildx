@@ -15,9 +15,10 @@ async function docker_buildx() {
         const platform = extractInput('platform', false, 'linux/amd64,linux/arm64,linux/arm/v7');
         const buildArg = extractInput('buildArg', false, '');
         const target = extractInput('target', false, '');
+        const label = extractInput('label', false, '');
         const context = extractInput('context', false, '.');
         const buildFunction = publish ? buildAndPublish : buildOnly;
-        await buildFunction(platform, imageName, imageTag, dockerFile, buildArg, load, context, target);
+        await buildFunction(platform, imageName, imageTag, dockerFile, buildArg, load, context, target, label);
         cleanMyself();
     } catch (error) {
         core.setFailed(error.message);
@@ -49,7 +50,7 @@ async function executeShellScript(scriptName, ...parameters) {
     child_process.execSync(command, { stdio: 'inherit' });
 }
 
-async function buildAndPublish(platform, imageName, imageTag, dockerFile, buildArg, load, context, target) {
+async function buildAndPublish(platform, imageName, imageTag, dockerFile, buildArg, load, context, target, label) {
     core.info('Running buildAndPublish')
     const dockerHubUser = extractInput('dockerHubUser', false);
     const dockerUser = extractInput('dockerUser', !dockerHubUser, dockerHubUser);
@@ -58,12 +59,12 @@ async function buildAndPublish(platform, imageName, imageTag, dockerFile, buildA
     const dockerServer = extractInput('dockerServer', false, '');
 
     await executeShellScript('docker_login', dockerUser, dockerPassword, dockerServer);
-    await executeShellScript('docker_build', platform, imageName, imageTag, dockerFile, true, buildArg, load, context, target);
+    await executeShellScript('docker_build', platform, imageName, imageTag, dockerFile, true, buildArg, load, context, target, label);
 }
 
-async function buildOnly(platform, imageName, imageTag, dockerFile, buildArg, load, context, target) {
+async function buildOnly(platform, imageName, imageTag, dockerFile, buildArg, load, context, target, label) {
     core.info('Running buildOnly')
-    await executeShellScript('docker_build', platform, imageName, imageTag, dockerFile, false, buildArg, load, context, target);
+    await executeShellScript('docker_build', platform, imageName, imageTag, dockerFile, false, buildArg, load, context, target, label);
 }
 
 function cloneMyself() {
