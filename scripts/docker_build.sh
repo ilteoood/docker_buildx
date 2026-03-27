@@ -36,4 +36,4 @@ then
    TARGET="--target $INPUT_TARGET"
 fi
 
-docker buildx build --platform "$INPUT_PLATFORM" $PUSH $LOAD "$TAGS" "$BUILD_ARGS" "$LABELS" "$TARGET" -f "$INPUT_DOCKERFILE" "$INPUT_CONTEXT"
+docker buildx build --platform "$INPUT_PLATFORM" $PUSH $LOAD $TAGS $BUILD_ARGS $LABELS $TARGET -f "$INPUT_DOCKERFILE" "$INPUT_CONTEXT"
