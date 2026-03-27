@@ -6,17 +6,17 @@ async function docker_buildx() {
     try {
         checkPlatform();
         cloneMyself();
-        const imageName = extractInput('imageName', true);
+        const imageName = getInput('imageName', { required: true });
         await executeShellScript('install_buildx');
-        const imageTag = extractInput('tag', false, 'latest');
-        const dockerFile = extractInput('dockerFile', false, 'Dockerfile');
-        const publish = extractInput('publish', false, 'false').toLowerCase() === 'true';
-        const load = extractInput('load', false, 'false').toLowerCase() === 'true';
-        const platform = extractInput('platform', false, 'linux/amd64,linux/arm64,linux/arm/v7');
-        const buildArg = extractInput('buildArg', false, '');
-        const target = extractInput('target', false, '');
-        const label = extractInput('label', false, '');
-        const context = extractInput('context', false, '.');
+        const imageTag = getInput('tag');
+        const dockerFile = getInput('dockerFile');
+        const publish = getInput('publish').toLowerCase() === 'true';
+        const load = getInput('load').toLowerCase() === 'true';
+        const platform = getInput('platform');
+        const buildArg = getInput('buildArg');
+        const target = getInput('target');
+        const label = getInput('label');
+        const context = getInput('context');
         const buildFunction = publish ? buildAndPublish : buildOnly;
         await buildFunction(platform, imageName, imageTag, dockerFile, buildArg, label, load, context, target);
         cleanMyself();
@@ -32,29 +32,15 @@ function checkPlatform() {
     }
 }
 
-function extractInput(inputName, required, defaultValue) {
-    const inputValue = getInput(inputName);
-    if (required) checkRequiredInput(inputName, inputValue);
-    return inputValue ? inputValue : defaultValue;
-}
-
-function checkRequiredInput(inputName, inputValue) {
-    if (!inputValue) {
-        throw new Error(`The parameter ${inputName} is missing`);
-    }
-}
-
 async function executeShellScript(scriptName, envVars = {}) {
     const command = `docker_buildx/scripts/${scriptName}.sh`;
     child_process.execSync(command, { stdio: 'inherit', env: { ...process.env, ...envVars } });
 }
 
 async function buildAndPublish(platform, imageName, imageTag, dockerFile, buildArg, label, load, context, target) {
-    const dockerHubUser = extractInput('dockerHubUser', false);
-    const dockerUser = extractInput('dockerUser', !dockerHubUser, dockerHubUser);
-    const dockerHubPassword = extractInput('dockerHubPassword', false);
-    const dockerPassword = extractInput('dockerPassword', !dockerHubPassword, dockerHubPassword);
-    const dockerServer = extractInput('dockerServer', false, '');
+    const dockerUser = getInput('dockerUser', { required: true });
+    const dockerPassword = getInput('dockerPassword', { required: true });
+    const dockerServer = getInput('dockerServer', { required: false });
 
     info('Running login')
     await executeShellScript('docker_login', {
