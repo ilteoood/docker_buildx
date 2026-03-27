@@ -1,3 +1,3 @@
 #!/bin/sh -l
 
-echo $2 | docker login --username $1 --password-stdin $3
+echo "$INPUT_DOCKER_PASSWORD" | docker login --username "$INPUT_DOCKER_USER" --password-stdin "$INPUT_DOCKER_SERVER"

@@ -44,27 +44,41 @@ function checkRequiredInput(inputName, inputValue) {
     }
 }
 
-async function executeShellScript(scriptName, ...parameters) {
-    parameters = (parameters || []).join(' ');
-    const command = `docker_buildx/scripts/${scriptName}.sh ${parameters}`;
-    child_process.execSync(command, { stdio: 'inherit' });
+async function executeShellScript(scriptName, envVars = {}) {
+    const command = `docker_buildx/scripts/${scriptName}.sh`;
+    child_process.execSync(command, { stdio: 'inherit', env: { ...process.env, ...envVars } });
 }
 
 async function buildAndPublish(platform, imageName, imageTag, dockerFile, buildArg, label, load, context, target) {
-    info('Running buildAndPublish')
     const dockerHubUser = extractInput('dockerHubUser', false);
     const dockerUser = extractInput('dockerUser', !dockerHubUser, dockerHubUser);
     const dockerHubPassword = extractInput('dockerHubPassword', false);
     const dockerPassword = extractInput('dockerPassword', !dockerHubPassword, dockerHubPassword);
     const dockerServer = extractInput('dockerServer', false, '');
 
-    await executeShellScript('docker_login', dockerUser, dockerPassword, dockerServer);
-    await executeShellScript('docker_build', platform, imageName, imageTag, dockerFile, true, buildArg, label, load, context, target);
+    info('Running login')
+    await executeShellScript('docker_login', {
+        INPUT_DOCKER_USER: dockerUser,
+        INPUT_DOCKER_PASSWORD: dockerPassword,
+        INPUT_DOCKER_SERVER: dockerServer,
+    });
+    await buildOnly(platform, imageName, imageTag, dockerFile, buildArg, label, load, context, target);
 }
 
 async function buildOnly(platform, imageName, imageTag, dockerFile, buildArg, label, load, context, target) {
-    info('Running buildOnly')
-    await executeShellScript('docker_build', platform, imageName, imageTag, dockerFile, false, buildArg, label, load, context, target);
+    info('Running build')
+    await executeShellScript('docker_build', {
+        INPUT_PLATFORM: platform,
+        INPUT_IMAGE_NAME: imageName,
+        INPUT_TAG: imageTag,
+        INPUT_DOCKERFILE: dockerFile,
+        INPUT_PUSH: 'false',
+        INPUT_BUILD_ARG: buildArg,
+        INPUT_LABEL: label,
+        INPUT_LOAD: String(load),
+        INPUT_CONTEXT: context,
+        INPUT_TARGET: target,
+    });
 }
 
 function cloneMyself() {
