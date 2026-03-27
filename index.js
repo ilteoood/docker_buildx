@@ -1,6 +1,6 @@
-const core = require('@actions/core');
-const os = require('os');
-const child_process = require('child_process');
+import {setFailed, info, getInput} from '@actions/core';
+import os from 'os';
+import child_process from 'child_process';
 
 async function docker_buildx() {
     try {
@@ -21,19 +21,19 @@ async function docker_buildx() {
         await buildFunction(platform, imageName, imageTag, dockerFile, buildArg, load, context, target, label);
         cleanMyself();
     } catch (error) {
-        core.setFailed(error.message);
+        setFailed(error.message);
     }
 }
 
 function checkPlatform() {
-    core.info('Checking platform')
+    info('Checking platform')
     if (os.platform() !== 'linux') {
         throw new Error('Only supported on linux platform');
     }
 }
 
 function extractInput(inputName, required, defaultValue) {
-    const inputValue = core.getInput(inputName);
+    const inputValue = getInput(inputName);
     if (required) checkRequiredInput(inputName, inputValue);
     return inputValue ? inputValue : defaultValue;
 }
@@ -51,7 +51,7 @@ async function executeShellScript(scriptName, ...parameters) {
 }
 
 async function buildAndPublish(platform, imageName, imageTag, dockerFile, buildArg, load, context, target, label) {
-    core.info('Running buildAndPublish')
+    info('Running buildAndPublish')
     const dockerHubUser = extractInput('dockerHubUser', false);
     const dockerUser = extractInput('dockerUser', !dockerHubUser, dockerHubUser);
     const dockerHubPassword = extractInput('dockerHubPassword', false);
@@ -63,12 +63,12 @@ async function buildAndPublish(platform, imageName, imageTag, dockerFile, buildA
 }
 
 async function buildOnly(platform, imageName, imageTag, dockerFile, buildArg, load, context, target, label) {
-    core.info('Running buildOnly')
+    info('Running buildOnly')
     await executeShellScript('docker_build', platform, imageName, imageTag, dockerFile, false, buildArg, load, context, target, label);
 }
 
 function cloneMyself() {
-    core.info('Cloning action')
+    info('Cloning action')
     child_process.execSync(`git clone https://github.com/ilteoood/docker_buildx`);
 }
 
