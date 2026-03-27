@@ -15,7 +15,7 @@ inputs:
         default: "Dockerfile"
     buildArg:
         description: "Build arguments (comma separated) used to build the image"
-        default: "none"
+        default: ""
     publish:
         description: "Indicate if the builded image should be published on a registry"
         default: "false"
