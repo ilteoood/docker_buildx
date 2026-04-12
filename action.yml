@@ -42,5 +42,5 @@ inputs:
         description: "Set the context path"
         default: "."
 runs:
-    using: 'node20'
+    using: 'node24'
     main: index.js
